@@ -26,3 +26,12 @@ After programming a basic window which can render lines and text, these are the 
 - [ ] Design a fancy icon for the app. (creative tasks are hard to put time estimates on...)
 - [ ] 
 The steps above don't need this particular order so work can be done on multiple things in parallel. Also time estimates may be too low if someone needs to do some serious learning to do one of the tasks.
+
+### Setup for running the Project
+This project uses the following Python packages:
+`numpy pygame PyOpenGL PyOpenGL-accelerate`
+
+Make sure your Python setup includes them and is able to run a basic pygame application.
+Then run the file `causticsbox.py` using python.
+
+This section will be improved as the project moves forward. E.g. packages might be changed or replaced.
