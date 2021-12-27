@@ -8,10 +8,16 @@ from OpenGL.GLU import *
 import mainwindow
 
 # Linux pygame bug workaround, see https://github.com/kivy/kivy/issues/5810
-out = subprocess.run('qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.active'.split(' '),
-                       stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False).stdout.decode().strip()
-if out == 'true':
-    os.environ['SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR'] = '0'
+xdg_desktop_environment = os.environ.get('XDG_CURRENT_DESKTOP', '')
+kde_plasma = 'kde' in xdg_desktop_environment.lower()
+if kde_plasma:
+    try:
+        out = subprocess.run('qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.active'.split(' '),
+                               stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False).stdout.decode().strip()
+        if out == 'true':
+            os.environ['SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR'] = '0'
+    except FileNotFoundError:
+        print('qdbus was not found. If you are using KDE Plasma CausticsBox may not work.')
 
 class Context:
     def __init__(self):
