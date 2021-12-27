@@ -1,7 +1,7 @@
 import numpy as np
 
 
-diffuse_rays = 1000
+DIFFUSE_RAYS = 1000
 
 
 '''
@@ -28,14 +28,14 @@ class Geometry:
 
 
 def create_point_light_rays(x, y, props=None):
-    ray_pos = np.array([(x, y)] * diffuse_rays)
-    ray_dir = np.array([(np.cos(i/diffuse_rays*2*np.pi), np.sin(i/diffuse_rays*2*np.pi)) for i in range(diffuse_rays)])
-    ray_props = np.array([props] * diffuse_rays)
+    ray_pos = np.array([(x, y)] * DIFFUSE_RAYS)
+    ray_dir = np.array([(np.cos(i/DIFFUSE_RAYS*2*np.pi), np.sin(i/DIFFUSE_RAYS*2*np.pi)) for i in range(DIFFUSE_RAYS)])
+    ray_props = np.array([props] * DIFFUSE_RAYS)
     return ray_pos, ray_dir, ray_props
 
-
 def create_spot_light_rays(x, y, dir_x, dir_y, angle, props=None):
-    ray_pos = np.array([(x, y)] * diffuse_rays)
-    ray_dir = np.array([(np.cos(i/diffuse_rays*2*np.pi), np.sin(i/diffuse_rays*2*np.pi)) for i in range(diffuse_rays)])
-    ray_props = np.array([props] * diffuse_rays)
+    # TODO use angle and direction (this is currently the same as create_point_light_rays)
+    ray_pos = np.array([(x, y)] * DIFFUSE_RAYS)
+    ray_dir = np.array([(np.cos(i/DIFFUSE_RAYS*2*np.pi), np.sin(i/DIFFUSE_RAYS*2*np.pi)) for i in range(DIFFUSE_RAYS)])
+    ray_props = np.array([props] * DIFFUSE_RAYS)
     return ray_pos, ray_dir, ray_props

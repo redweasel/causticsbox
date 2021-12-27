@@ -1,9 +1,17 @@
+import os
+import subprocess
+
 import pygame as pg
-from time import time
 from OpenGL.GL import *
 from OpenGL.GLU import *
+
 import mainwindow
 
+# Linux pygame bug workaround, see https://github.com/kivy/kivy/issues/5810
+out = subprocess.run('qdbus org.kde.KWin /Compositor org.kde.kwin.Compositing.active'.split(' '),
+                       stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False).stdout.decode().strip()
+if out == 'true':
+    os.environ['SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR'] = '0'
 
 class Context:
     def __init__(self):
@@ -16,6 +24,8 @@ class Context:
         self.width = 800
         self.height = 600
         self.init_screen(800, 600)
+
+        print("OpenGL:", glGetString(GL_VENDOR), glGetString(GL_RENDERER))
 
         pg.key.set_repeat(500, 10)
 
@@ -42,6 +52,7 @@ class Context:
     def init_screen(self, w, h):
         self.width = w
         self.height = h
+        pg.display.gl_set_attribute(pg.GL_CONTEXT_PROFILE_CORE, 1)
         pg.display.gl_set_attribute(pg.GL_MULTISAMPLEBUFFERS, 1)
         pg.display.gl_set_attribute(pg.GL_MULTISAMPLESAMPLES, 8)
         self.screen = pg.display.set_mode((w, h), pg.RESIZABLE | pg.DOUBLEBUF | pg.OPENGL, vsync=1)  # type: pg.Surface # TODO is this needed on resize?
@@ -89,21 +100,27 @@ class Context:
         pg.quit()
 
 
-ctx = Context()
-ctx.set_menu(mainwindow.MainWindow())
+def main():
+    ctx = Context()
+    ctx.set_menu(mainwindow.MainWindow())
 
-# Main Loop (this is where the program runs)
-while True:
-    # Eingaben einlesen
-    for e in pg.event.get():
-        # Für das Schließereignis das Spiel kontrolliert beenden
-        if e.type == pg.QUIT:
-            ctx.quit()
-            exit()
-        ctx.event(e)
+    # Main Loop (this is where the program runs)
+    running = True
+    while running:
+        # render content of the window using opengl
+        ctx.render()
+        # show rendered content
+        pg.display.flip()
+        # wait for input events
+        pg.event.wait()
+        # read input events
+        for e in pg.event.get():
+            if e.type == pg.QUIT:
+                # detect the quit event to close peacefully
+                running = False
+                break
+            ctx.event(e)
+    ctx.quit()
 
-    ctx.render()
-
-    # Gezeichnete Inhalte in das Fenster übertragen
-    pg.display.flip()
-    pg.event.wait()
+if __name__=="__main__":
+    main()

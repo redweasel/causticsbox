@@ -1,9 +1,10 @@
 import pygame as pg
-import numpy as np
-from random import random as rnd
-import raytracer as rt
 from OpenGL.GL import *
 from OpenGL.GLU import *
+
+import numpy as np
+
+import raytracer as rt
 
 
 class Menu:
@@ -24,12 +25,23 @@ class Menu:
 
 
 def draw_rays(ray_pos, ray_dir, ray_props):
+    hack = 0.0
+    vendor = glGetString(GL_VENDOR)
+    if vendor == b"Intel":
+        hack = 0.2
+
     # TODO very inefficient! better to use new shader pipeline.
     glLineWidth(2)
     glBegin(GL_LINES)
     for i in range(len(ray_props)):
-        # compensate for light loss depending on the angle that is caused by rasterisation
-        fac = abs((ray_dir[i][0]**2 - ray_dir[i][1]**2) / (ray_dir[i][0]**2 + ray_dir[i][1]**2)) * 0.2 + 1.0
+        # HACK: compensate for light loss depending on the angle that is caused by rasterisation
+        # this is only necessary on some devices, and not on others... weird! Is rasterisation with MSAA different?
+        # For the record:
+        # my NVIDIA GTX 1070 works without this hack
+        # my Intel UHD Graphics 620 needs this hack
+        # - redweasel
+        fac = abs((ray_dir[i][0]**2 - ray_dir[i][1]**2) / (ray_dir[i][0]**2 + ray_dir[i][1]**2)) * hack + 1.0
+
         glColor(ray_props[i] / fac)  # hope the precision is enough
         glVertex2fv(ray_pos[i])
         glVertex2fv(ray_pos[i] + ray_dir[i] * 2000.0)
@@ -39,7 +51,6 @@ def draw_rays(ray_pos, ray_dir, ray_props):
 class MainWindow(Menu):
     def __init__(self):
         super(MainWindow).__init__()
-        pass
 
     def render(self, screen: pg.Surface, width: int, height: int):
         glEnable(GL_LINE_SMOOTH)

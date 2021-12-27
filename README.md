@@ -24,7 +24,7 @@ After programming a basic window which can render lines and text, these are the 
 - [ ] add additional placeable light sources with tweakable brightness. (30 min worktime)
 - [ ] implement a more efficient algorithm for line-line intersection when there are lots of (connected) lines. Either a BVH with AABBs since the structure of the lines is mostly known or a simpler sweep and prune algorithm for O(n log n) time complexity. (few hours worktime)
 - [ ] Design a fancy icon for the app. (creative tasks are hard to put time estimates on...)
-- [ ] 
+
 The steps above don't need this particular order so work can be done on multiple things in parallel. Also time estimates may be too low if someone needs to do some serious learning to do one of the tasks.
 
 ### Setup for running the Project
@@ -35,3 +35,10 @@ Make sure your Python setup includes them and is able to run a basic pygame appl
 Then run the file `causticsbox.py` using python.
 
 This section will be improved as the project moves forward. E.g. packages might be changed or replaced.
+
+### Setup for Development
+1. Get VSCode.
+2. Install git and clone the repository using `Source Control > Clone Repository > paste "https://github.com/redweasel/causticsbox"`
+3. Make sure the python extension is correctly installed and configured in VSCode.
+4. Install python packages using `pip3 install numpy pygame PyOpenGL PyOpenGL-accelerate`
+5. Go to VSCode settings (JSON) and add the line `"python.linting.pylintArgs": ["--extension-pkg-whitelist=pygame"],`
