@@ -12,11 +12,11 @@ jobs:
           python-version: '3.x'
       - name: Install pylint
         run: |
-        python -m pip install --upgrade pip
-        pip install --no-cache-dir pylint
+          python -m pip install --upgrade pip
+          pip install --no-cache-dir pylint
       - name: Install dependencies
         run: |
-        pip install --no-cache-dir numpy pygame PyOpenGL PyOpenGL-accelerate
+          pip install --no-cache-dir numpy pygame PyOpenGL PyOpenGL-accelerate
       - name: Lint
         run: |
-        pylint -E --rcfile=.pylintrc --extension-pkg-whitelist=pygame *.py
+          pylint -E --rcfile=.pylintrc --extension-pkg-whitelist=pygame *.py
